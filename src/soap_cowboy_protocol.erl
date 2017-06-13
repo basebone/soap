@@ -53,6 +53,7 @@
               Version::atom(),
               Version_module::module()) -> {ok, cowboy_req(), cowboy_env()}. 
 upgrade(Cowboy_req, Env, _, {Handler, Options}, Version, Version_module) ->
+  io:format("In shared Upgrade method"),
   Cowboy_state = #state{env = Env, handler = Handler},
   case soap_server_handler:new_req(Handler, Version, Options, Cowboy_req) of
     {continue, Soap_req} ->
