@@ -83,10 +83,6 @@ call(Body, Headers, Options, Soap_action, Interface) ->
 call(Body, Headers, Options, Soap_action, 
          #interface{model = Model} = Interface, Attachments) ->
     Interface2 = process_options(Options, Interface),
-    erlang:display("-------------------------------------"),
-    erlang:display(Options),
-    erlang:display(Interface2),
-    erlang:display("-------------------------------------"),
     case encode_headers(Headers, Model) of
         {ok, Encoded_headers} ->
             call_body(Body, Encoded_headers, Soap_action, Interface2, Attachments);
@@ -174,15 +170,15 @@ call_http(Http_body,
                      version = Version,
                      url = Url}, Http_headers, Content_type) ->
     %%io:format("request: ~nheaders: ~p~nbody: ~s~n", [Http_headers, Http_body]),    
-    erlang:display(Http_client_options),
+    erlang:diplay(Http_body),
     Http_res = Client:http_request(Url, Http_body, Http_client_options, 
                                    Http_headers, Content_type),
     case Http_res of
         {ok, Code, Response_headers, Response_body} 
             when Code == 200; Code == 500 ->
-            %%io:format("response: code: ~p~nheaders: ~p~nbody: ~s~n", 
-            %%  [Code, Response_headers, 
-            %%   lists:sublist(binary_to_list(Response_body), 300)]),
+            io:format("response: code: ~p~nheaders: ~p~nbody: ~s~n", 
+              [Code, Response_headers, 
+               lists:sublist(binary_to_list(Response_body), 300)]),
             parse_message(Response_body, Model, Code, Response_headers, 
                           Version, Ns, Handler);
         {ok, Code, Response_headers, Response_body} ->
