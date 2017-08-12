@@ -84,6 +84,7 @@ call(Body, Headers, Options, Soap_action,
          #interface{model = Model} = Interface, Attachments) ->
     Interface2 = process_options(Options, Interface),
     erlang:display("-------------------------------------"),
+    erlang:display(Options),
     erlang:display(Interface2),
     erlang:display("-------------------------------------"),
     case encode_headers(Headers, Model) of
