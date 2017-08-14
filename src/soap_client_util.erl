@@ -170,7 +170,7 @@ call_http(Http_body,
                      version = Version,
                      url = Url}, Http_headers, Content_type) ->
     %%io:format("request: ~nheaders: ~p~nbody: ~s~n", [Http_headers, Http_body]),    
-    erlang:display(Http_body),
+    erlang:display(lists:flatten(Http_body)),
     Http_res = Client:http_request(Url, Http_body, Http_client_options, 
                                    Http_headers, Content_type),
     case Http_res of
