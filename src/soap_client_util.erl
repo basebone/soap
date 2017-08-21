@@ -257,6 +257,7 @@ parse_mime(Message, Model, Http_status, Http_headers,
 
 parse_xml(Message, Model, Http_status, Http_headers, 
           Version, Ns, Handler, Attachments, HTTP_body) ->
+    io:format("Before Parse: ~p ~p ~p ~p",[Message, Model, Version, Ns]),
     try erlsom:parse_sax(Message, 
                          #p_state{model = Model, version = Version,
                                   soap_ns = Ns, state = start,
