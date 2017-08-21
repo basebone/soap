@@ -178,7 +178,7 @@ call_http(Http_body,
             when Code == 200; Code == 500 ->
             io:format("response: code: ~p~nheaders: ~p~nbody: ~s~n", 
               [Code, Response_headers, 
-               lists:sublist(binary_to_list(Response_body), 300)]),
+               binary_to_list(Response_body)]),
             parse_message(Response_body, Model, Code, Response_headers, 
                           Version, Ns, Handler);
         {ok, Code, Response_headers, Response_body} ->
