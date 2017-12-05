@@ -170,15 +170,15 @@ call_http(Http_body,
                      version = Version,
                      url = Url}, Http_headers, Content_type) ->
     %%io:format("request: ~nheaders: ~p~nbody: ~s~n", [Http_headers, Http_body]),    
-    erlang:display(lists:flatten(Http_body)),
+    %%erlang:display(lists:flatten(Http_body)),
     Http_res = Client:http_request(Url, Http_body, Http_client_options, 
                                    Http_headers, Content_type),
     case Http_res of
         {ok, Code, Response_headers, Response_body} 
             when Code == 200; Code == 500 ->
-            io:format("response: code: ~p~nheaders: ~p~nbody: ~s~n", 
-              [Code, Response_headers, 
-               binary_to_list(Response_body)]),
+            %%io:format("response: code: ~p~nheaders: ~p~nbody: ~s~n", 
+            %%  [Code, Response_headers, 
+            %%   binary_to_list(Response_body)]),
             parse_message(Response_body, Model, Code, Response_headers, 
                           Version, Ns, Handler);
         {ok, Code, Response_headers, Response_body} ->
@@ -257,7 +257,7 @@ parse_mime(Message, Model, Http_status, Http_headers,
 
 parse_xml(Message, Model, Http_status, Http_headers, 
           Version, Ns, Handler, Attachments, HTTP_body) ->
-    io:format("Before Parse: ~p ~p ~p",[Message, Version, Ns]),
+    %%io:format("Before Parse: ~p ~p ~p",[Message, Version, Ns]),
     try erlsom:parse_sax(Message, 
                          #p_state{model = Model, version = Version,
                                   soap_ns = Ns, state = start,
