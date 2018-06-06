@@ -275,6 +275,8 @@ check_content_type(Version, Content_type) ->
 
 check_content_type2('1.1', "text/xml" ++ _) ->
     true;
+check_content_type2('1.2', "text/xml" ++ _) ->
+    true;
 check_content_type2('1.2', "application/soap+xml" ++ _) ->
     true;
 check_content_type2(_, "multipart/related" ++ _) ->
