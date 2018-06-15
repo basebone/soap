@@ -134,7 +134,8 @@ handle_message(Message, Soap_req) ->
                                  state = start},
                                  fun xml_parser_cb_wrapped/2, []) of
         {ok, SoapReq2, _Tail} ->
-            lager:info([{audit, true}], "Soap Audit logging: State ~p Request ~p Response ~p", [Handler_state, Message, soap_req:http_body(SoapReq2)]),
+            HttpBody = soap_req:http_body(SoapReq2),
+            lager:info([{audit, true}], "Soap Audit logging: State ~p Request ~p Response ~p", [Handler_state, Message, HttpBody]),
             soap_req:http_response(SoapReq2)
     catch
         Class:Reason ->
