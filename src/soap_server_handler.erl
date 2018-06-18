@@ -156,9 +156,9 @@ handle_message(Message, Soap_req) ->
             Exception_resp = make_exception(Handler, Soap_error),
             Error_soap_req = Soap_error#soap_error.soap_req,
             Error_s_req2 = soap_req:set_resp(Exception_resp, Error_soap_req),
-            io:format("~s",[<< << X:1/binary >> || << X:1/binary >> <= soap_req:http_body(Error_s_req2), X =/= <<"\t">> andalso X =/= <<"\n">> >>]),
-            lager:info([{audit, soap}], "Soap Audit logging: State ~p Request ~s Response ~s", [Handler_state, << << X:1/binary >> || << X:1/binary >> <= Message, X =/= <<"\t">> andalso X =/= <<"\n">> >>, << << X:1/binary >> || << X:1/binary >> <= soap_req:http_response(Error_s_req2), X =/= <<"\t">> andalso X =/= <<"\n">> >>]),
-            soap_req:http_response(Error_s_req2)
+            Response = soap_req:http_response(Error_s_req2),
+            lager:info([{audit, soap}], "Soap Audit logging: State ~p Request ~s Response ~s", [Handler_state, << << X:1/binary >> || << X:1/binary >> <= Message, X =/= <<"\t">> andalso X =/= <<"\n">> >>, << << X:1/binary >> || << X:1/binary >> <= Response, X =/= <<"\t">> andalso X =/= <<"\n">> >>]),
+            Response
     end.
 
 %% This function can be called by the server integration middleware.
