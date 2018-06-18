@@ -138,7 +138,7 @@ handle_message(Message, Soap_req) ->
             erlang:display(Handler_state),
             erlang:display(Message),
             erlang:display(HttpBody),
-            lager:info([{audit, soap}], "Soap Audit logging: State ~p Request ~p Response ~p", [Handler_state, Message, HttpBody]),
+            lager:info([{audit, soap}], "Soap Audit logging: State ~p Request ~s Response ~s", [Handler_state, Message, HttpBody]),
             soap_req:http_response(SoapReq2)
     catch
         Class:Reason ->
