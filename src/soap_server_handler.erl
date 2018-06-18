@@ -157,7 +157,8 @@ handle_message(Message, Soap_req) ->
             Error_soap_req = Soap_error#soap_error.soap_req,
             Error_s_req2 = soap_req:set_resp(Exception_resp, Error_soap_req),
             Response = soap_req:http_response(Error_s_req2),
-            lager:info([{audit, soap}], "Soap Audit logging: State ~p Request ~s Response ~s", [Handler_state, << << X:1/binary >> || << X:1/binary >> <= Message, X =/= <<"\t">> andalso X =/= <<"\n">> >>, << << X:1/binary >> || << X:1/binary >> <= Response, X =/= <<"\t">> andalso X =/= <<"\n">> >>]),
+            {_, Status_code, Headers, HTTP_body, _} = Response,
+            lager:info([{audit, soap}], "Soap Audit logging: State ~p Request ~s Status_code ~p Headers ~p Response ~s", [Handler_state, << << X:1/binary >> || << X:1/binary >> <= Message, X =/= <<"\t">> andalso X =/= <<"\n">> >>, Status_code, Headers, << << X:1/binary >> || << X:1/binary >> <= HTTP_body, X =/= <<"\t">> andalso X =/= <<"\n">> >>]),
             Response
     end.
 
