@@ -135,10 +135,7 @@ handle_message(Message, Soap_req) ->
                                  fun xml_parser_cb_wrapped/2, []) of
         {ok, SoapReq2, _Tail} ->
             HttpBody = soap_req:http_body(SoapReq2),
-            erlang:display(Handler_state),
-            erlang:display(Message),
-            erlang:display(HttpBody),
-            lager:info([{audit, soap}], "Soap Audit logging: State ~p Request ~s Response ~s", [Handler_state, Message, HttpBody]),
+            lager:info([{audit, soap}], "Soap Audit logging: State ~p Request ~s Response ~s", [Handler_state, << << X:1/binary >> || << X:1/binary >> <= Message, X =/= <<"\t">> andalso X =/= <<"\n">> >>, << << X:1/binary >> || << X:1/binary >> <= HttpBody, X =/= <<"\t">> andalso X =/= <<"\n">> >>]),
             soap_req:http_response(SoapReq2)
     catch
         Class:Reason ->
@@ -159,7 +156,7 @@ handle_message(Message, Soap_req) ->
             Exception_resp = make_exception(Handler, Soap_error),
             Error_soap_req = Soap_error#soap_error.soap_req,
             Error_s_req2 = soap_req:set_resp(Exception_resp, Error_soap_req),
-            lager:info([{audit, soap}], "Soap Audit logging: State ~p Request ~p Response ~p", [Handler_state, Message, soap_req:http_body(Error_s_req2)]),
+            lager:info([{audit, soap}], "Soap Audit logging: State ~p Request ~s Response ~s", [Handler_state, << << X:1/binary >> || << X:1/binary >> <= Message, X =/= <<"\t">> andalso X =/= <<"\n">> >>, << << X:1/binary >> || << X:1/binary >> <= soap_req:http_body(Error_s_req2), X =/= <<"\t">> andalso X =/= <<"\n">> >>]),
             soap_req:http_response(Error_s_req2)
     end.
 
