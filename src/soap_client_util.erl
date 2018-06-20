@@ -173,7 +173,7 @@ call_http(Http_body,
     %%erlang:display(lists:flatten(Http_body)),
     Http_res = Client:http_request(Url, Http_body, Http_client_options, 
                                    Http_headers, Content_type),
-    audit:info([{audit, true}], "Soap Audit logging: Url ~p Headers ~p Request ~p Response ~p", [Url, Http_headers, iolist_to_binary(Http_body), Http_res]),
+    audit:info([{audit, soapclient}], "Soap Audit logging: Url ~p Headers ~p Request ~p Response ~p", [Url, Http_headers, iolist_to_binary(Http_body), Http_res]),
     case Http_res of
         {ok, Code, Response_headers, Response_body} 
             when Code == 200; Code == 500 ->

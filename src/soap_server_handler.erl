@@ -136,7 +136,7 @@ handle_message(Message, Soap_req) ->
         {ok, SoapReq2, _Tail} ->
             Response = soap_req:http_response(SoapReq2),
             {_, Status_code, Headers, HTTP_body, _} = Response,
-            audit:info([{audit,soap}],"Soap Audit logging: State ~p Request ~s Response ~s", [Handler_state, << << X:1/binary >> || << X:1/binary >> <= Message, X =/= <<"\t">> andalso X =/= <<"\n">> >>, HTTP_body]),
+            audit:info([{audit,soapserver}],"Soap Audit logging: State ~p Request ~s Response ~s", [Handler_state, << << X:1/binary >> || << X:1/binary >> <= Message, X =/= <<"\t">> andalso X =/= <<"\n">> >>, HTTP_body]),
             Response
     catch
         Class:Reason ->
@@ -160,7 +160,7 @@ handle_message(Message, Soap_req) ->
             Error_s_req2 = soap_req:set_resp(Exception_resp, Error_soap_req),
             Response = soap_req:http_response(Error_s_req2),
             {_, Status_code, Headers, HTTP_body, _} = Response,
-            audit:info([{audit,soap}],"Soap Audit logging: State ~p Request ~s Status_code ~p Headers ~p Response ~s", [Handler_state, << << X:1/binary >> || << X:1/binary >> <= Message, X =/= <<"\t">> andalso X =/= <<"\n">> >>, Status_code, Headers, HTTP_body]),
+            audit:info([{audit,soapserver}],"Soap Audit logging: State ~p Request ~s Status_code ~p Headers ~p Response ~s", [Handler_state, << << X:1/binary >> || << X:1/binary >> <= Message, X =/= <<"\t">> andalso X =/= <<"\n">> >>, Status_code, Headers, HTTP_body]),
             Response
     end.
 
