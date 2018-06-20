@@ -58,9 +58,8 @@
     prefix_count = 0 :: integer(), %% used to assign unique prefixes
     tns_prefix :: string() | undefined, %% used for rpc type wsdl if the target ns
                                         %% is also used as the ns of an operation.
-    imported = [] :: [{string(), string() | undefined}], %% imported namespaces,
+    imported = [] :: [{string(), string() | undefined}] %% imported namespaces,
     %% {URI, Prefix}, to prevent duplicates and to be able to add the 
     %% prefix later on.
-    userlogitems = []::any()
 }).
 -type interface() :: #interface{}.

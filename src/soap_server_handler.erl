@@ -134,11 +134,10 @@ handle_message(Message, Soap_req) ->
                                  state = start},
                                  fun xml_parser_cb_wrapped/2, []) of
         {ok, SoapReq2, _Tail} ->
-            HttpBody = soap_req:http_body(SoapReq2),
-            lager:dispatch_log(lager_event,info, [{audit,soap}],"Soap Audit logging: State ~p Request ~s Response ~s", [Handler_state, << << X:1/binary >> || << X:1/binary >> <= Message, X =/= <<"\t">> andalso X =/= <<"\n">> >>, << << X:1/binary >> || << X:1/binary >> <= HttpBody, X =/= <<"\t">> andalso X =/= <<"\n">> >>],16384,safe),
-            soap_req:http_response(SoapReq2);
-        A ->
-            lager:info("~p",[A])   
+            Response = soap_req:http_response(SoapReq2),
+            {_, Status_code, Headers, HTTP_body, _} = Response,
+            audit:info([{audit,soap}],"Soap Audit logging: State ~p Request ~s Response ~s", [Handler_state, << << X:1/binary >> || << X:1/binary >> <= Message, X =/= <<"\t">> andalso X =/= <<"\n">> >>, HTTP_body]),
+            Response
     catch
         Class:Reason ->
             Soap_error = 
@@ -155,13 +154,13 @@ handle_message(Message, Soap_req) ->
                                     soap_req = Soap_req,
                                     description = "Error parsing XML"}
                 end, 
-            lager:info("~p ~p",[Class, Reason]),
+            lager:error("~p ~p ~s",[Class, Reason, << << X:1/binary >> || << X:1/binary >> <= Message, X =/= <<"\t">> andalso X =/= <<"\n">> >>]),
             Exception_resp = make_exception(Handler, Soap_error),
             Error_soap_req = Soap_error#soap_error.soap_req,
             Error_s_req2 = soap_req:set_resp(Exception_resp, Error_soap_req),
             Response = soap_req:http_response(Error_s_req2),
             {_, Status_code, Headers, HTTP_body, _} = Response,
-            lager:dispatch_log(lager_event,info, [{audit,soap}],"Soap Audit logging: State ~p Request ~s Status_code ~p Headers ~p Response ~s", [Handler_state, << << X:1/binary >> || << X:1/binary >> <= Message, X =/= <<"\t">> andalso X =/= <<"\n">> >>, Status_code, Headers, HTTP_body],16384,safe),
+            audit:info([{audit,soap}],"Soap Audit logging: State ~p Request ~s Status_code ~p Headers ~p Response ~s", [Handler_state, << << X:1/binary >> || << X:1/binary >> <= Message, X =/= <<"\t">> andalso X =/= <<"\n">> >>, Status_code, Headers, HTTP_body]),
             Response
     end.
 

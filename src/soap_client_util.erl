@@ -153,8 +153,6 @@ process_options(Options, #interface{http_options = Http_opts} = Interface) ->
             ({version, Version}, Interf) ->
                 Interf#interface{version = Version,
                                  soap_ns = soap_ns(Version)};
-            ({log, LogItems}, Interf) ->
-                Interf#interface{userlogitems = LogItems};
             (_, Interf) ->
                 Interf
         end,
@@ -170,13 +168,12 @@ call_http(Http_body,
                      client_handler = Handler,
                      soap_ns = Ns,
                      version = Version,
-                     url = Url,
-                     userlogitems=UserLog}, Http_headers, Content_type) ->
+                     url = Url}, Http_headers, Content_type) ->
     %%io:format("request: ~nheaders: ~p~nbody: ~s~n", [Http_headers, Http_body]),    
     %%erlang:display(lists:flatten(Http_body)),
     Http_res = Client:http_request(Url, Http_body, Http_client_options, 
                                    Http_headers, Content_type),
-    lager:info([{audit, true}], "Soap Audit logging: UserItems ~p Url ~p Headers ~p Request ~p Response ~p", [UserLog, Url, Http_headers, iolist_to_binary(Http_body), Http_res]),
+    audit:info([{audit, true}], "Soap Audit logging: Url ~p Headers ~p Request ~p Response ~p", [Url, Http_headers, iolist_to_binary(Http_body), Http_res]),
     case Http_res of
         {ok, Code, Response_headers, Response_body} 
             when Code == 200; Code == 500 ->
